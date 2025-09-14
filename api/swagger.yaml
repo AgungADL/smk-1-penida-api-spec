@@ -1,0 +1,638 @@
+openapi: 3.0.0
+info:
+  title: API Sekolah - Backend CRUD & Auth
+  version: 1.0.0
+  description: API untuk mengelola data sekolah, termasuk admin, guru, ekstrakurikuler, media, dan berita. Hanya dapat diakses oleh admin.
+
+servers:
+  - url: /api
+    description: Server Lokal
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+paths:
+  # Autentikasi Admin
+  /auth/login:
+    post:
+      summary: Login Admin
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: admin@sekolah.com
+                password:
+                  type: string
+                  example: passwordrahasia
+      responses:
+        '200':
+          description: Login berhasil, token JWT dikembalikan.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      username:
+                        type: string
+                      email:
+                        type: string
+        '401':
+          description: Email atau kata sandi tidak valid.
+
+  # CRUD Guru
+  /teachers:
+    get:
+      summary: Mengambil semua data guru
+      tags:
+        - Teachers
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Daftar guru berhasil diambil.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    name:
+                      type: string
+                    subject:
+                      type: string
+                    photo_url:
+                      type: string
+    post:
+      summary: Menambahkan guru baru
+      tags:
+        - Teachers
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                subject:
+                  type: string
+                photo_url:
+                  type: string
+      responses:
+        '201':
+          description: Guru berhasil ditambahkan.
+
+  /teachers/{id}:
+    get:
+      summary: Mengambil detail guru berdasarkan ID
+      tags:
+        - Teachers
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Detail guru berhasil diambil.
+    put:
+      summary: Memperbarui data guru
+      tags:
+        - Teachers
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                subject:
+                  type: string
+                photo_url:
+                  type: string
+      responses:
+        '200':
+          description: Guru berhasil diperbarui.
+    delete:
+      summary: Menghapus guru
+      tags:
+        - Teachers
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Guru berhasil dihapus.
+
+  # CRUD Ekstrakurikuler
+  /extracurriculars:
+    get:
+      summary: Mengambil semua data ekstrakurikuler
+      tags:
+        - Extracurriculars
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Daftar ekstrakurikuler berhasil diambil.
+    post:
+      summary: Menambahkan ekstrakurikuler baru
+      tags:
+        - Extracurriculars
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+      responses:
+        '201':
+          description: Ekstrakurikuler berhasil ditambahkan.
+
+  /extracurriculars/{id}:
+    get:
+      summary: Mengambil detail ekstrakurikuler
+      tags:
+        - Extracurriculars
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Detail ekstrakurikuler berhasil diambil.
+    put:
+      summary: Memperbarui ekstrakurikuler
+      tags:
+        - Extracurriculars
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+      responses:
+        '200':
+          description: Ekstrakurikuler berhasil diperbarui.
+    delete:
+      summary: Menghapus ekstrakurikuler
+      tags:
+        - Extracurriculars
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Ekstrakurikuler berhasil dihapus.
+
+  # CRUD Kategori
+  /categories:
+    get:
+      summary: Mengambil semua kategori
+      tags:
+        - Categories
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Daftar kategori berhasil diambil.
+    post:
+      summary: Menambahkan kategori baru
+      tags:
+        - Categories
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+      responses:
+        '201':
+          description: Kategori berhasil ditambahkan.
+
+  /categories/{id}:
+    get:
+      summary: Mengambil detail kategori
+      tags:
+        - Categories
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Detail kategori berhasil diambil.
+    put:
+      summary: Memperbarui kategori
+      tags:
+        - Categories
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+      responses:
+        '200':
+          description: Kategori berhasil diperbarui.
+    delete:
+      summary: Menghapus kategori
+      tags:
+        - Categories
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Kategori berhasil dihapus.
+
+  # CRUD Photos
+  /photos:
+    get:
+      summary: Mengambil semua foto
+      tags:
+        - Photos
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Daftar foto berhasil diambil.
+    post:
+      summary: Menambahkan foto baru
+      tags:
+        - Photos
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                url:
+                  type: string
+                category_id:
+                  type: integer
+                extracurricular_id:
+                  type: integer
+      responses:
+        '201':
+          description: Foto berhasil ditambahkan.
+  
+  /photos/{id}:
+    get:
+      summary: Mengambil detail foto
+      tags:
+        - Photos
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Detail foto berhasil diambil.
+    put:
+      summary: Memperbarui foto
+      tags:
+        - Photos
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                url:
+                  type: string
+                category_id:
+                  type: integer
+                extracurricular_id:
+                  type: integer
+      responses:
+        '200':
+          description: Foto berhasil diperbarui.
+    delete:
+      summary: Menghapus foto
+      tags:
+        - Photos
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Foto berhasil dihapus.
+
+  # CRUD Videos
+  /videos:
+    get:
+      summary: Mengambil semua vidio
+      tags:
+        - Videos
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Daftar vidio berhasil diambil.
+    post:
+      summary: Menambahkan vidio baru
+      tags:
+        - Videos
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                url:
+                  type: string
+                category_id:
+                  type: integer
+                extracurricular_id:
+                  type: integer
+      responses:
+        '201':
+          description: Vidio berhasil ditambahkan.
+  
+  /videos/{id}:
+    get:
+      summary: Mengambil detail vidio
+      tags:
+        - Videos
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Detail vidio berhasil diambil.
+    put:
+      summary: Memperbarui vidio
+      tags:
+        - Videos
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                url:
+                  type: string
+                category_id:
+                  type: integer
+                extracurricular_id:
+                  type: integer
+      responses:
+        '200':
+          description: Vidio hasil diperbarui.
+    delete:
+      summary: Menghapus vidio
+      tags:
+        - Videos
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Vidio berhasil dihapus.
+
+  # CRUD News
+  /news:
+    get:
+      summary: Mengambil semua berita
+      tags:
+        - News
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Daftar berita berhasil diambil.
+    post:
+      summary: Menambahkan berita baru
+      tags:
+        - News
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                photoUrl:
+                  type: string
+                content:
+                  type: string
+                category_id:
+                  type: integer
+      responses:
+        '201':
+          description: Vidio berhasil ditambahkan.
+  
+  /news/{id}:
+    get:
+      summary: Mengambil detail berita
+      tags:
+        - News
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Detail berita berhasil diambil.
+    put:
+      summary: Memperbarui berita
+      tags:
+        - News
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                photoUrl:
+                  type: string
+                content:
+                  type: string
+                category_id:
+                  type: integer
+      responses:
+        '200':
+          description: berita hasil diperbarui.
+    delete:
+      summary: Menghapus berita
+      tags:
+        - News
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Berita berhasil dihapus.
