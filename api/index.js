@@ -9,10 +9,10 @@ app.use(express.json());
 app.use(cors());
 
 // Gunakan middleware untuk menyajikan file statis dari folder 'public'
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'swagger.yaml')));
 
 // Muat file swagger.yaml dari folder 'public'
-const swaggerDocument = YAML.load(path.join(__dirname, 'public', 'swagger.yaml'));
+const swaggerDocument = YAML.load(path.join(__dirname, 'swagger.yaml'));
 
 // Konfigurasi Swagger UI untuk mencari file YAML di URL
 const swaggerOptions = {
