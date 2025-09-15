@@ -518,7 +518,7 @@ paths:
                   type: integer
       responses:
         '200':
-          description: Vidio hasil diperbarui.
+          description: Video berhasil diperbarui.
     delete:
       summary: Menghapus vidio
       tags:
@@ -569,7 +569,7 @@ paths:
                   type: integer
       responses:
         '201':
-          description: Vidio berhasil ditambahkan.
+          description: Berita berhasil ditambahkan.
   
   /news/{id}:
     get:
@@ -616,7 +616,7 @@ paths:
                   type: integer
       responses:
         '200':
-          description: berita hasil diperbarui.
+          description: Berita berhasil diperbarui.
     delete:
       summary: Menghapus berita
       tags:

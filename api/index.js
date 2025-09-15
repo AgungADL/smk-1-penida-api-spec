@@ -1,17 +1,18 @@
 const express = require("express");
 const swaggerUi = require("swagger-ui-express");
+const YAML = require("yamljs");
+const path = require("path");
 const cors = require("cors");
 const app = express();
 
 app.use(express.json());
 app.use(cors());
 
+// Muat file swagger.yaml dari folder 'public'
+const swaggerDocument = YAML.load(path.join(__dirname, 'public', 'swagger.yaml'));
+
 // Gunakan Swagger UI untuk menampilkan dokumentasi di URL root
-// 'swaggerUrl: /swagger.yaml' memberitahu Swagger UI untuk mengambil file dari URL ini.
-app.use('/', swaggerUi.serve, swaggerUi.setup(null, {
-  swaggerUrl: '/swagger.yaml',
-  explorer: true
-}));
+app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Rute API Anda yang sudah ada
 app.get('/hello', (req, res) => {
