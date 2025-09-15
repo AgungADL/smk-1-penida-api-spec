@@ -8,6 +8,10 @@
   ],
   "routes": [
     {
+      "src": "/(.*\\.(?:css|js|png|jpg|jpeg|gif|ico|svg))",
+      "dest": "/api/public/$1"
+    },
+    {
       "src": "/swagger.yaml",
       "dest": "/api/public/swagger.yaml"
     },
